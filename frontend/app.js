@@ -1,11 +1,4 @@
 var app = angular.module('appTitleGoesHere', [], function ($routeProvider, $locationProvider) {
-
-    const loggedIn = function ($location) {
-        const authToken = localStorage.getItem('kfm_');
-        if (!authToken)
-            $location.url('/login');
-    }
-
     $routeProvider
         .when('/', { templateUrl: "./views/default.html", controller: "DefController" })
         .when('/login', { templateUrl: "./views/login.html", controller: "LoginController" })
