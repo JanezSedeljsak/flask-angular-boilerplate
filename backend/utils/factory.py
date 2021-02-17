@@ -1,6 +1,5 @@
   
 import os
-import logging
 import sys
 from flask import Flask, send_from_directory, request, jsonify
 from flask_cors import CORS
@@ -29,12 +28,10 @@ def create_app(config):
 
     @app.errorhandler(500)
     def server_error(e):
-        logging.error(e)
         return jsonify(error="500 internal error")
 
     @app.errorhandler(404)
     def not_found(e):
-        logging.error(e)
         return jsonify(error="404 route not found")
 
     return app
