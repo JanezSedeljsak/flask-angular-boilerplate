@@ -1,4 +1,4 @@
-# Python Flask + SQLAlchemy (backend) & AngularJS + Bootstrap (frontend)
+## Python Flask + SQLAlchemy (backend) & AngularJS + Bootstrap (frontend)
 
 ## Getting Started
 
