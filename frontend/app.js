@@ -2,8 +2,8 @@ var app = angular.module('appTitleGoesHere', [], function ($routeProvider, $loca
     $routeProvider
         .when('/', { templateUrl: "./views/default.html", controller: "DefController" })
         .when('/preview/:id', { templateUrl: "./views/note_preview.html", controller: "PreviewController" })
-        .when('/edit/:id', { templateUrl: "./views/note_form.html", controller: "NoteCreateController" })
-        .when('/create', { templateUrl: "./views/note_form.html", controller: "NoteModifyController" })
+        .when('/edit/:id', { templateUrl: "./views/note_form.html", controller: "NoteModifyController" })
+        .when('/create', { templateUrl: "./views/note_form.html", controller: "NoteCreateController" })
         .otherwise({ redirectTo: "/" });
 
     $locationProvider.html5Mode(false);
@@ -20,7 +20,7 @@ function MainCtrl($scope, $route, $routeParams, $location, $window) {
 }
 
 
-app.controller('DefController', function ($scope, $location, $notes) {
+app.controller('DefController', function ($scope, $navigate, $notes) {
     $scope.notes = [];
     $scope.filterText = "";
     $scope.init = function() {
@@ -30,27 +30,28 @@ app.controller('DefController', function ($scope, $location, $notes) {
     }
 
     $scope.createNote = function() {
-        window.location.href = "/#/create"
+        $navigate.goTo("/#/create");
     }
 
     $scope.modifyNote = function(id) {
-        window.location.href = ["/#/edit/", id].join("");
+        $navigate.goTo(["/#/edit/", id].join(""));
     }
 
     $scope.previewNote = function(id) {
-        window.location.href = ["/#/preview/", id].join("");
+        $navigate.goTo(["/#/preview/", id].join(""));
     }
 
     $scope.deleteNote = function(id) {
         if (confirm("Are you sure you want to delete this note?")) {
             $notes.delete(id).then(function(result) {
-                alert("Note was deleted");
+                alert("Note was deleted")
+                $navigate.goTo("/#/"); // go to home page after create
             });
         }
     }
 });
 
-app.controller('PreviewController', function ($scope, $location, $notes, $routeParams) {
+app.controller('PreviewController', function ($scope, $navigate, $notes, $routeParams) {
     $scope.note = {};
     $scope.init = function() {
         $notes.getById($routeParams.id).then(function(result) {
@@ -59,23 +60,24 @@ app.controller('PreviewController', function ($scope, $location, $notes, $routeP
     }
 
     $scope.goBack = function() {
-        history.go(-1);
+        $navigate.goBack();
     }
 
     $scope.modifyNote = function(id) {
-        window.location.href = ["/#/edit/", id].join("");
+        $navigate.goTo(["/#/edit/", id].join(""));
     }
 
     $scope.deleteNote = function(id) {
         if (confirm("Are you sure you want to delete this note?")) {
             $notes.delete(id).then(function(result) {
                 alert("Note was deleted");
+                $navigate.goTo("/#/"); // go to home page after create
             });
         }
     }
 });
 
-app.controller('NoteCreateController', function ($scope, $location, $notes) {
+app.controller('NoteCreateController', function ($scope, $navigate, $notes) {
     $scope.init = function() {};
     $scope.note = {
         "Title": "",
@@ -83,19 +85,45 @@ app.controller('NoteCreateController', function ($scope, $location, $notes) {
     };
 
     $scope.submit = function() {
-        console.log($scope.note);
+        $notes.create($scope.note).then(function(result) {
+            alert("Note was created!");
+            $navigate.goTo("/#/"); // go to home page after create
+        })
+    }
+
+    $scope.goBack = function() {
+        $navigate.goBack();
     }
 });
 
-app.controller('NoteModifyController', function ($scope, $location, $notes, $routeParams) {
+app.controller('NoteModifyController', function ($scope, $navigate, $notes, $routeParams) {
     $scope.note = {};
+    $scope.isEdit = true;
+
     $scope.init = function() {
         $notes.getById($routeParams.id).then(function(result) {
             $scope.note = result;
+            console.log(result);
         });
     }
 
+    $scope.deleteNote = function(id) {
+        if (confirm("Are you sure you want to delete this note?")) {
+            $notes.delete(id).then(function(result) {
+                alert("Note was deleted");
+                $navigate.goTo("/#/"); // go to home page after create
+            });
+        }
+    }
+
     $scope.submit = function() {
-        console.log($scope.note);
+        $notes.modify($routeParams.id, $scope.note).then(function(result) {
+            alert("Note was updated!");
+            $scope.init();
+        })
+    }
+
+    $scope.goBack = function() {
+        $navigate.goBack();
     }
 });

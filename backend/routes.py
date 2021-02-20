@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from .models import notes
-from .methods import sqlExe
+from .methods import sqlExe, sqlAction
 
 noteRoutes = Blueprint("notes", __name__, url_prefix='/api/note')
 
@@ -25,22 +25,48 @@ def get_notes():
 
 @noteRoutes.route('/create', methods=["POST"])
 def create_note():
-    query = select([notes.c.Title, notes.c.Description, notes.c.DateCreated])
-    result = sqlExe(query)
+    data = request.get_json()
 
-    return jsonify(result)
+    # validate form
+    for field in ["Title", "Description"]:
+        if field not in data or data[field] == "":
+            return jsonify(success=False, message="Invalid form data")
 
-@noteRoutes.route('/modify/:id', methods=["POST"])
+    data = {
+        "Title": data["Title"],
+        "Description": data["Description"]
+    }
+    
+    query = notes.insert().values(data)
+    result = sqlAction(query)
+
+    return jsonify(success=True)
+
+@noteRoutes.route('/modify/<id>', methods=["POST"])
 def modify_note(id):
-    query = select([notes.c.Title, notes.c.Description, notes.c.DateCreated])
-    result = sqlExe(query)
+    data = request.get_json()
+
+    # validate form
+    for field in ["Id", "Title", "Description"]:
+        if field not in data or data[field] == "":
+            return jsonify(success=False, message="Invalid form data")
+
+
+    data = {
+        "Title": data["Title"],
+        "Description": data["Description"]
+    }
+
+    query = notes.update().values(data).where(notes.c.Id==id)
+    result = sqlAction(query)
 
     return jsonify(result)
 
-@noteRoutes.route('/delete/:id', methods=["POST"])
+@noteRoutes.route('/delete/<id>', methods=["POST"])
 def delete_note(id):
-    print(id,"tried to delete")
-    query = select([notes.c.Title, notes.c.Description, notes.c.DateCreated])
-    result = sqlExe(query)
+    
+    query = delete(notes).where(notes.c.Id == id)
+    result = sqlAction(query)
 
-    return jsonify(result)
+    return jsonify(success=True)
+

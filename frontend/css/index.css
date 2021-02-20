@@ -4,7 +4,13 @@
 }
 
 body {
-    background-color: #616a7a;
+    background-color: #535e68ee !important;
+}
+
+main {
+    height: 100vh !important;
+    margin-top: 50px !important;
+    padding-top: 30px !important;
 }
 
 .hover:hover {
