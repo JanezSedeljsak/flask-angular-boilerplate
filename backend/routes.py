@@ -1,8 +1,10 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import select, delete
 from .models import notes
-from .methods import sqlExe, sqlAction
+from .methods import sqlExe, sqlAction, validateFields
+from datetime import datetime
 
+# notes Bluebrint (all the routes that are used for the notes model - they use the /api/note prefix)
 noteRoutes = Blueprint("notes", __name__, url_prefix='/api/note')
 
 @noteRoutes.route('/get', methods=["POST"])
@@ -27,14 +29,13 @@ def get_notes():
 def create_note():
     data = request.get_json()
 
-    # validate form
-    for field in ["Title", "Description"]:
-        if field not in data or data[field] == "":
-            return jsonify(success=False, message="Invalid form data")
+    if not validateFields(data, ["Title", "Description"]):
+        return jsonify(success=False, message="Invalid form data")
 
     data = {
         "Title": data["Title"],
-        "Description": data["Description"]
+        "Description": data["Description"],
+        "DateCreated": datetime.utcnow()
     }
     
     query = notes.insert().values(data)
@@ -46,21 +47,17 @@ def create_note():
 def modify_note(id):
     data = request.get_json()
 
-    # validate form
-    for field in ["Id", "Title", "Description"]:
-        if field not in data or data[field] == "":
-            return jsonify(success=False, message="Invalid form data")
-
+    if not validateFields(data, ["Id", "Title", "Description"]):
+        return jsonify(success=False, message="Invalid form data")
 
     data = {
         "Title": data["Title"],
         "Description": data["Description"]
     }
-
     query = notes.update().values(data).where(notes.c.Id==id)
     result = sqlAction(query)
 
-    return jsonify(result)
+    return jsonify(success=True)
 
 @noteRoutes.route('/delete/<id>', methods=["POST"])
 def delete_note(id):

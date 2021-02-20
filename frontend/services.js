@@ -1,3 +1,4 @@
+// CRUD service for Notes model
 app.service('$notes', function($http) {
     this.notes_api_uri = '/api/note/';
     this.default_options = function(url_ending, data) {
@@ -39,6 +40,7 @@ app.service('$notes', function($http) {
     }
 });
 
+// Custom navigation service
 app.service('$navigate', function() {
     this.goBack = function() {
         history.go(-1);
