@@ -1,13 +1,21 @@
   
 import os
 import sys
-from flask import Flask, send_from_directory, request, jsonify
+from flask import Flask, send_from_directory, request, jsonify, render_template
 from flask_cors import CORS
+from .views import noteRoutes
+from .config import DB_URI
 
 def create_app(config):
-    app = Flask(__name__, static_folder='./../../frontend')
+    project_root = os.path.dirname(__file__)
+    template_path = os.path.join(project_root, './')
+
+    app = Flask(__name__, static_folder='./../frontend')
     app.config.from_object(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = DB_URI
     CORS(app)
+
+    app.register_blueprint(noteRoutes)
 
     @app.after_request
     def add_header(response):
@@ -16,6 +24,7 @@ def create_app(config):
     @app.route('/api/heartbeat', methods=['GET', 'POST'])
     def heartbeat():
         return jsonify(message="It's working")
+
 
 
     @app.route('/', defaults={'path': ''})

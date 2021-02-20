@@ -19,7 +19,21 @@ function MainCtrl($scope, $route, $routeParams, $location, $window) {
 }
 
 
-app.controller('DefController', function ($scope, $location) {
+app.controller('DefController', function ($scope, $location, $notes) {
+    $scope.notes = [];
+    $scope.init = function() {
+        $notes.get().then(function(result) {
+            $scope.notes = result;
+        });
+    }
+
+    $scope.modifyNote = function(note) {
+
+    }
+
+    $scope.deleteNote = function(id) {
+
+    }
 });
 
 app.controller('LoginController', function ($scope, $location) {

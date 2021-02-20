@@ -1,3 +1,10 @@
-<div>
-    <p> this is the home page </p>
+<div ng-init="init()">
+    <div ng-repeat="note in notes" class="card bg-dark text-white" style="width: 100%; margin-bottom: 10px">
+        <div class="card-body">
+          <h5 class="card-title">{{ note.Title }}</h5>
+          <p class="card-text">{{ note.Description }}</p>
+          <a ng-click="deleteNote(note.Id)" class="card-link text-danger hover">Delete</a>
+          <a ng-click="modifyNote(note)" class="card-link text-info hover">Modify</a>
+        </div>
+      </div>
 </div>
