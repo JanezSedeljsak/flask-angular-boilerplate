@@ -3,7 +3,7 @@ import os
 import sys
 from flask import Flask, send_from_directory, request, jsonify, render_template
 from flask_cors import CORS
-from .views import noteRoutes
+from .routes import noteRoutes
 from .config import DB_URI
 
 def create_app(config):
@@ -24,8 +24,6 @@ def create_app(config):
     @app.route('/api/heartbeat', methods=['GET', 'POST'])
     def heartbeat():
         return jsonify(message="It's working")
-
-
 
     @app.route('/', defaults={'path': ''})
     @app.route('/<path:path>')

@@ -1,7 +1,12 @@
 app.service('$notes', function($http) {
-    this.notes_api_uri = '/api/note/'
+    this.notes_api_uri = '/api/note/';
+
     this.get = function(titleFilter) {
-        return $http.get([this.notes_api_uri, "get"].join("")).then(function(response) {
+        return $http({
+            url: [this.notes_api_uri, "get"].join(""),
+            method: 'POST',
+            data: { titleFilter: titleFilter }
+        }).then(function(response) {
             return response.data;
         });
     };
@@ -19,8 +24,19 @@ app.service('$notes', function($http) {
     };
 
     this.delete = function(id) {
+        console.log(id);
         return $http.post([this.notes_api_uri, "delete/", id].join("")).then(function(response) {
             return response.data;
         });
     };
+
+    this.getById = function(id) {
+        return $http({
+            url: [this.notes_api_uri, "get"].join(""),
+            method: 'POST',
+            data: { id: id }
+        }).then(function(response) {
+            return response.data;
+        });  
+    }
 });

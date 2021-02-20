@@ -10,3 +10,10 @@ body {
 .hover:hover {
     cursor: pointer;
 }
+
+input, textarea {
+    background-color: #343a40 !important;
+    color: #ddd !important;
+    outline: none !important;
+    border: none !important;
+}
