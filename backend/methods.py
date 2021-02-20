@@ -38,8 +38,9 @@ def validateFields(data_recived, required_fields):
     @param: data_recived (dictionary object we recived from the frontend)
     @param: required_fields (list of fields which are required)
 
-    @result: boolean
+    @result: boolean [True => fields are valid | False => some fields are missing]
     """
 
     # data is valid if all fields in required are also in the recived
-    return not (set(data_recived.keys()) - set(required_fields))
+    print(set(required_fields) - set(data_recived.keys()))
+    return not len(set(required_fields) - set(data_recived.keys()))
