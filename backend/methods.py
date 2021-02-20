@@ -42,5 +42,4 @@ def validateFields(data_recived, required_fields):
     """
 
     # data is valid if all fields in required are also in the recived
-    print(set(required_fields) - set(data_recived.keys()))
     return not len(set(required_fields) - set(data_recived.keys()))
