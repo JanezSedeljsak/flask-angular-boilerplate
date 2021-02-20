@@ -1,9 +1,5 @@
 # Python Flask + SQLAlchemy (backend) & AngularJS + Bootstrap (frontend)
 
-Mobile app school project to explore and research a specific area on the map
-
-![alt text](https://github.com/JanezSedeljsak/kois/blob/master/assets/img/readme.jpg)
-
 ## Getting Started
 
 > Download the project<br/>
