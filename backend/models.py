@@ -18,9 +18,10 @@ notes = Table('notes', metadata,
 )
 
 # methods which should be called on the init of the database
-db = mySQL.connect(host=DB_CONFIG["URL"],user=DB_CONFIG["USERNAME"],passwd=DB_CONFIG["PASSWORD"])
-db1 = db.cursor()
-db1.execute("CREATE DATABASE IF NOT EXISTS %s" % DB_CONFIG["DB_NAME"])
-engine = create_engine(DB_URI)
-    
-metadata.create_all(engine)
+if __name__ == "__main__":
+    db = mySQL.connect(host=DB_CONFIG["URL"],user=DB_CONFIG["USERNAME"],passwd=DB_CONFIG["PASSWORD"])
+    db1 = db.cursor()
+    db1.execute("CREATE DATABASE IF NOT EXISTS %s" % DB_CONFIG["DB_NAME"])
+    engine = create_engine(DB_URI)
+        
+    metadata.create_all(engine)
